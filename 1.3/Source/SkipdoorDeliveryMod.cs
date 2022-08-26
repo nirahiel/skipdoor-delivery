@@ -25,26 +25,27 @@ namespace SkipdoorDelivery
 		{
 			base.CompTick();
 			if (Find.TickManager.TicksGame % Props.tickRate != 0) return;
+			if (parent.Position.GetZone(parent.Map) is not Zone_Stockpile zone)
+			{
+				return;
+			}
 
 			var dict = new Dictionary<ThingWithComps, Zone_Stockpile>();
 			foreach (var skipdoor in WorldComponent_SkipdoorManager.Instance.Skipdoors)
 			{
-				var stockpile = skipdoor.Position.GetZone(skipdoor.Map) as Zone_Stockpile;
-				if (stockpile != null)
+				if (skipdoor.Position.GetZone(skipdoor.Map) is Zone_Stockpile stockpile)
 				{
 					dict[skipdoor] = stockpile;
 				}
 			}
 
-			var ownZone = dict.TryGetValue(this.parent, out var zone) ? zone : null;
 			foreach (var t in GenRadial
 				         .RadialDistinctThingsAround(this.parent.Position, this.parent.Map, Props.radius, true).ToList())
 			{
 				if (t.def.category != ThingCategory.Item) continue;
 
-				var zones = dict.Where(x => ZoneCanAccept(x.Value, t) && (ownZone is null
-				                                                          || x.Value.GetStoreSettings().Priority >
-				                                                          ownZone.GetStoreSettings().Priority))
+				var zones = dict.Where(x => ZoneCanAccept(x.Value, t) && x.Value.GetStoreSettings().Priority >
+						zone.GetStoreSettings().Priority)
 					.OrderByDescending(x => x.Value.GetStoreSettings().Priority).ToList();
 				if (zones.TryRandomElement(out var selectedZone))
 				{
