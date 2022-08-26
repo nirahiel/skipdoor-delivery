@@ -1,0 +1,14 @@
+<Patch>
+
+	<Operation Class="PatchOperationAdd">
+		<xpath>Defs/ThingDef[defName="VPE_Skipdoor"]</xpath>
+		<value>
+			<comps>
+				<li Class="SkipdoorDelivery.CompProperties_TeleportBetweenStockpiles">
+					<tickRate>60</tickRate>
+					<radius>3</radius>
+				</li>
+			</comps>
+		</value>
+	</Operation>
+</Patch>
