@@ -24,36 +24,34 @@ namespace SkipdoorDelivery
 		public override void CompTick()
 		{
 			base.CompTick();
-			if (Find.TickManager.TicksGame % Props.tickRate == 0)
-			{
-				var dict = new Dictionary<ThingWithComps, Zone_Stockpile>();
-				foreach (var skipdoor in WorldComponent_SkipdoorManager.Instance.Skipdoors)
-				{
-					var stockpile = skipdoor.Position.GetZone(skipdoor.Map) as Zone_Stockpile;
-					if (stockpile != null)
-					{
-						dict[skipdoor] = stockpile;
-					}
-				}
+			if (Find.TickManager.TicksGame % Props.tickRate != 0) return;
 
-				var ownZone = dict.TryGetValue(this.parent, out var zone) ? zone : null;
-				foreach (var t in GenRadial
-					         .RadialDistinctThingsAround(this.parent.Position, this.parent.Map, Props.radius, true).ToList())
+			var dict = new Dictionary<ThingWithComps, Zone_Stockpile>();
+			foreach (var skipdoor in WorldComponent_SkipdoorManager.Instance.Skipdoors)
+			{
+				var stockpile = skipdoor.Position.GetZone(skipdoor.Map) as Zone_Stockpile;
+				if (stockpile != null)
 				{
-					if (t.def.category == ThingCategory.Item)
-					{
-						var zones = dict.Where(x => ZoneCanAccept(x.Value, t) && (ownZone is null
-						                                                          || x.Value.GetStoreSettings().Priority >
-						                                                          ownZone.GetStoreSettings().Priority))
-							.OrderByDescending(x => x.Value.GetStoreSettings().Priority).ToList();
-						if (zones.TryRandomElement(out var selectedZone))
-						{
-							var cell = selectedZone.Value.AllSlotCells()
-								.Where(x => StoreUtility.IsGoodStoreCell(x, zone.Map, t, null, this.parent.Faction)).RandomElement();
-							t.DeSpawn();
-							GenPlace.TryPlaceThing(t, cell, selectedZone.Value.Map, ThingPlaceMode.Near);
-						}
-					}
+					dict[skipdoor] = stockpile;
+				}
+			}
+
+			var ownZone = dict.TryGetValue(this.parent, out var zone) ? zone : null;
+			foreach (var t in GenRadial
+				         .RadialDistinctThingsAround(this.parent.Position, this.parent.Map, Props.radius, true).ToList())
+			{
+				if (t.def.category != ThingCategory.Item) continue;
+
+				var zones = dict.Where(x => ZoneCanAccept(x.Value, t) && (ownZone is null
+				                                                          || x.Value.GetStoreSettings().Priority >
+				                                                          ownZone.GetStoreSettings().Priority))
+					.OrderByDescending(x => x.Value.GetStoreSettings().Priority).ToList();
+				if (zones.TryRandomElement(out var selectedZone))
+				{
+					var cell = selectedZone.Value.AllSlotCells()
+						.Where(x => StoreUtility.IsGoodStoreCell(x, zone.Map, t, null, this.parent.Faction)).RandomElement();
+					t.DeSpawn();
+					GenPlace.TryPlaceThing(t, cell, selectedZone.Value.Map, ThingPlaceMode.Near);
 				}
 			}
 		}
