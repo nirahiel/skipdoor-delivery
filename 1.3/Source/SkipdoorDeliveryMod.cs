@@ -81,9 +81,11 @@ namespace SkipdoorDelivery
 
 					if (!targetCells.Any()) continue;
 
-					var targetCell = targetCells.RandomElement();
+					var skipdoorCell = target.skipdoor.Position;
+					targetCells.Sort((c1, c2) => c1.DistanceTo(skipdoorCell).CompareTo(c2.DistanceTo(skipdoorCell)));
+
 					thing.DeSpawn();
-					GenPlace.TryPlaceThing(thing, targetCell, targetZone.Map, ThingPlaceMode.Near);
+					GenPlace.TryPlaceThing(thing, targetCells.First(), targetZone.Map, ThingPlaceMode.Near);
 					break;
 				}
 			}
