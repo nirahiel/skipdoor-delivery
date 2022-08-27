@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using VanillaPsycastsExpanded.Skipmaster;
 using Verse;
+using Verse.Sound;
 
 namespace SkipdoorDelivery
 {
@@ -67,6 +68,8 @@ namespace SkipdoorDelivery
 
 			targets.Sort();
 
+			var skipExits = new HashSet<Skipdoor>();
+
 			foreach (var thing in GenRadial
 				         .RadialDistinctThingsAround(parent.Position, parent.Map, Props.radius, true)
 				         .Where(t => t.def.category == ThingCategory.Item))
@@ -86,8 +89,19 @@ namespace SkipdoorDelivery
 
 					thing.DeSpawn();
 					GenPlace.TryPlaceThing(thing, targetCells.First(), targetZone.Map, ThingPlaceMode.Near);
+					skipExits.Add(target.skipdoor);
 					break;
 				}
+			}
+
+			if (skipExits.Any(skipdoor => skipdoor.Map != parent.Map))
+			{
+				SoundDefOf.Psycast_Skip_Entry.PlayOneShot(parent);
+			}
+
+			foreach (var skipExit in skipExits)
+			{
+				SoundDefOf.Psycast_Skip_Exit.PlayOneShot(skipExit);
 			}
 		}
 	}
