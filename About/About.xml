@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
 	<name>Skipdoor Delivery</name>
-	<author>joseasoler</author>
+	<author>joseasoler, Taranchuk</author>
 	<supportedVersions>
 		<li>1.3</li>
 	</supportedVersions>
 	<packageId>joseasoler.SkipdoorDelivery</packageId>
-	<description>A patch for the Vanilla Psycasts Expanded mod. When two skipdoors belonging to the same network are placed on top of stockpile zones, items surrounding the skipgate will be teleported automatically to the stockpile zone with the highest priority. This can be used to take your hard-earned loot back to your base, or even to move items around the colony.</description>
+	<description>A patch for the skipdoor psycast from the Vanilla Psycasts Expanded mod. When two or more skipdoors are placed on top of stockpile zones, items surrounding them will be teleported automatically to the stockpile zone with the highest priority. This can be used to take your hard-earned loot back to your base, or even to move items around the colony.</description>
 	<loadAfter>
 		<li>Ludeon.RimWorld</li>
 		<li>Ludeon.RimWorld.Royalty</li>
