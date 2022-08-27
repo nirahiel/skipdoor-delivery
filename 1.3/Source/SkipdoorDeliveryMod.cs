@@ -30,10 +30,13 @@ namespace SkipdoorDelivery
 				return;
 			}
 
+			var currentZonePriority = zone.GetStoreSettings().Priority;
+
 			var targetZones = new List<Zone_Stockpile>();
 			foreach (var skipdoor in WorldComponent_SkipdoorManager.Instance.Skipdoors)
 			{
-				if (skipdoor.Position.GetZone(skipdoor.Map) is Zone_Stockpile stockpile)
+				if (skipdoor.Position.GetZone(skipdoor.Map) is Zone_Stockpile stockpile &&
+				    stockpile.GetStoreSettings().Priority > currentZonePriority)
 				{
 					targetZones.Add(stockpile);
 				}
@@ -44,8 +47,7 @@ namespace SkipdoorDelivery
 			{
 				if (t.def.category != ThingCategory.Item) continue;
 
-				var zones = targetZones.Where(x => ZoneCanAccept(x, t) && x.GetStoreSettings().Priority >
-						zone.GetStoreSettings().Priority)
+				var zones = targetZones.Where(x => ZoneCanAccept(x, t))
 					.OrderByDescending(x => x.GetStoreSettings().Priority).ToList();
 				if (zones.TryRandomElement(out var selectedZone))
 				{
