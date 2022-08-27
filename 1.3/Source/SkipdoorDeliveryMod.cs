@@ -41,6 +41,14 @@ namespace SkipdoorDelivery
 	{
 		public CompProperties_TeleportBetweenStockpiles Props => base.props as CompProperties_TeleportBetweenStockpiles;
 
+		public override void PostDrawExtraSelectionOverlays()
+		{
+			if (Props.radius > 0.1)
+			{
+				GenDraw.DrawRadiusRing(parent.Position, Props.radius);
+			}
+		}
+
 		public override void CompTick()
 		{
 			base.CompTick();
