@@ -4,6 +4,8 @@ Developing a RimWorld mod is a huge task that is only made possible because its 
 
 * **[Andreas Pardeike](https://www.patreon.com/pardeike/posts)** - [Harmony](https://harmony.pardeike.net/)
 * **[Fluffy](https://steamcommunity.com/id/FluffyMods/myworkshopfiles/?appid=294100)** - [How to report bugs in mods guide](https://steamcommunity.com/sharedfiles/filedetails/?id=725234314)
+* **[FrozenSnowFox](https://steamcommunity.com/id/FrozenSnowFox/myworkshopfiles/?appid=294100)** - [[FSF] Pose For Me](https://steamcommunity.com/sharedfiles/filedetails/?id=1932628728), used for the mod preview image.
+* **[gguake](https://steamcommunity.com/id/gguake/myworkshopfiles/?appid=294100)** - [Optional Name Display](https://steamcommunity.com/sharedfiles/filedetails/?id=2466336893), used for the mod preview image.
 * **[krafs](https://github.com/krafs/)** - [RimRef](https://github.com/krafs/RimRef), [compilation without external dependencies or extra setup steps](https://ludeon.com/forums/index.php?topic=49914.0).
 * **[Marnador](https://ludeon.com/forums/index.php?action=profile;u=36313)** - [RimWorld fan made font](https://ludeon.com/forums/index.php?topic=11022.0), used for the mod preview image.
 * **[Nadia Eghbal](https://github.com/nayafia)** - [Contributing Guides: A Template](https://github.com/nayafia/contributing-template)
