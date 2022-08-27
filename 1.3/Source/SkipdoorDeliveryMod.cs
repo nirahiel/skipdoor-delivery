@@ -1,4 +1,5 @@
-﻿using RimWorld;
+﻿using System;
+using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
 using VanillaPsycastsExpanded.Skipmaster;
@@ -17,6 +18,23 @@ namespace SkipdoorDelivery
 		}
 	}
 
+	internal class SkipdoorZone : IComparable<SkipdoorZone>
+	{
+		public Skipdoor skipdoor;
+		public Zone_Stockpile zone;
+
+		public SkipdoorZone(Skipdoor door, Zone_Stockpile doorZone)
+		{
+			skipdoor = door;
+			zone = doorZone;
+		}
+
+		public int CompareTo(SkipdoorZone other)
+		{
+			return zone.GetStoreSettings().Priority.CompareTo(other.zone.GetStoreSettings().Priority);
+		}
+	}
+
 	public class CompTeleportBetweenStockpiles : ThingComp
 	{
 		public CompProperties_TeleportBetweenStockpiles Props => base.props as CompProperties_TeleportBetweenStockpiles;
@@ -32,29 +50,30 @@ namespace SkipdoorDelivery
 
 			var currentZonePriority = zone.GetStoreSettings().Priority;
 
-			var targetZones = new List<Zone_Stockpile>();
+			var targets = new List<SkipdoorZone>();
 			foreach (var skipdoor in WorldComponent_SkipdoorManager.Instance.Skipdoors)
 			{
 				if (skipdoor.Position.GetZone(skipdoor.Map) is Zone_Stockpile stockpile &&
 				    stockpile.GetStoreSettings().Priority > currentZonePriority)
 				{
-					targetZones.Add(stockpile);
+					targets.Add(new SkipdoorZone(skipdoor, stockpile));
 				}
 			}
 
-			if (targetZones.Count == 0)
+			if (targets.Count == 0)
 			{
 				return;
 			}
 
-			targetZones.Sort((z1, z2) => z2.GetStoreSettings().Priority.CompareTo(z1.GetStoreSettings().Priority));
+			targets.Sort();
 
 			foreach (var thing in GenRadial
 				         .RadialDistinctThingsAround(parent.Position, parent.Map, Props.radius, true)
 				         .Where(t => t.def.category == ThingCategory.Item))
 			{
-				foreach (var targetZone in targetZones)
+				foreach (var target in targets)
 				{
+					var targetZone = target.zone;
 					if (!targetZone.GetStoreSettings().AllowedToAccept(thing)) continue;
 
 					var targetCells = targetZone.AllSlotCells().Where(cell =>
