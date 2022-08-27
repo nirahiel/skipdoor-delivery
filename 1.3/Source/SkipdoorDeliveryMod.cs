@@ -42,6 +42,11 @@ namespace SkipdoorDelivery
 				}
 			}
 
+			if (targetZones.Count == 0)
+			{
+				return;
+			}
+
 			targetZones.Sort((z1, z2) => z2.GetStoreSettings().Priority.CompareTo(z1.GetStoreSettings().Priority));
 
 			foreach (var t in GenRadial
