@@ -13,7 +13,7 @@ namespace SkipdoorDelivery
 
 		public CompProperties_TeleportBetweenStockpiles()
 		{
-			this.compClass = typeof(CompTeleportBetweenStockpiles);
+			compClass = typeof(CompTeleportBetweenStockpiles);
 		}
 	}
 
@@ -50,31 +50,24 @@ namespace SkipdoorDelivery
 			targetZones.Sort((z1, z2) => z2.GetStoreSettings().Priority.CompareTo(z1.GetStoreSettings().Priority));
 
 			foreach (var t in GenRadial
-				         .RadialDistinctThingsAround(this.parent.Position, this.parent.Map, Props.radius, true).ToList())
+				         .RadialDistinctThingsAround(parent.Position, parent.Map, Props.radius, true)
+				         .Where(t => t.def.category == ThingCategory.Item))
 			{
-				if (t.def.category != ThingCategory.Item) continue;
-
-				var zones = targetZones.Where(x => ZoneCanAccept(x, t));
-				if (zones.TryRandomElement(out var selectedZone))
+				foreach (var targetZone in targetZones)
 				{
-					var cell = selectedZone.AllSlotCells()
-						.Where(x => StoreUtility.IsGoodStoreCell(x, zone.Map, t, null, this.parent.Faction)).RandomElement();
+					if (!targetZone.GetStoreSettings().AllowedToAccept(t)) continue;
+
+					var targetCells = targetZone.AllSlotCells().Where(cell =>
+						StoreUtility.IsGoodStoreCell(cell, targetZone.Map, t, null, parent.Faction)).ToList();
+
+					if (!targetCells.Any()) continue;
+
+					var targetCell = targetCells.RandomElement();
 					t.DeSpawn();
-					GenPlace.TryPlaceThing(t, cell, selectedZone.Map, ThingPlaceMode.Near);
+					GenPlace.TryPlaceThing(t, targetCell, targetZone.Map, ThingPlaceMode.Near);
+					break;
 				}
 			}
-		}
-
-		public bool ZoneCanAccept(Zone_Stockpile zone, Thing t)
-		{
-			var storeSettings = zone.GetStoreSettings();
-			if (!storeSettings.AllowedToAccept(t))
-			{
-				return false;
-			}
-
-			return zone.AllSlotCells().Where(x => StoreUtility.IsGoodStoreCell(x, zone.Map, t, null, this.parent.Faction))
-				.Any();
 		}
 	}
 }
