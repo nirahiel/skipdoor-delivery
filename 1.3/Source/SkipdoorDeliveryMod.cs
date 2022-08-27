@@ -42,13 +42,14 @@ namespace SkipdoorDelivery
 				}
 			}
 
+			targetZones.Sort((z1, z2) => z2.GetStoreSettings().Priority.CompareTo(z1.GetStoreSettings().Priority));
+
 			foreach (var t in GenRadial
 				         .RadialDistinctThingsAround(this.parent.Position, this.parent.Map, Props.radius, true).ToList())
 			{
 				if (t.def.category != ThingCategory.Item) continue;
 
-				var zones = targetZones.Where(x => ZoneCanAccept(x, t))
-					.OrderByDescending(x => x.GetStoreSettings().Priority).ToList();
+				var zones = targetZones.Where(x => ZoneCanAccept(x, t));
 				if (zones.TryRandomElement(out var selectedZone))
 				{
 					var cell = selectedZone.AllSlotCells()
