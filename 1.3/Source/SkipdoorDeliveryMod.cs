@@ -30,12 +30,12 @@ namespace SkipdoorDelivery
 				return;
 			}
 
-			var dict = new Dictionary<ThingWithComps, Zone_Stockpile>();
+			var targetZones = new List<Zone_Stockpile>();
 			foreach (var skipdoor in WorldComponent_SkipdoorManager.Instance.Skipdoors)
 			{
 				if (skipdoor.Position.GetZone(skipdoor.Map) is Zone_Stockpile stockpile)
 				{
-					dict[skipdoor] = stockpile;
+					targetZones.Add(stockpile);
 				}
 			}
 
@@ -44,15 +44,15 @@ namespace SkipdoorDelivery
 			{
 				if (t.def.category != ThingCategory.Item) continue;
 
-				var zones = dict.Where(x => ZoneCanAccept(x.Value, t) && x.Value.GetStoreSettings().Priority >
+				var zones = targetZones.Where(x => ZoneCanAccept(x, t) && x.GetStoreSettings().Priority >
 						zone.GetStoreSettings().Priority)
-					.OrderByDescending(x => x.Value.GetStoreSettings().Priority).ToList();
+					.OrderByDescending(x => x.GetStoreSettings().Priority).ToList();
 				if (zones.TryRandomElement(out var selectedZone))
 				{
-					var cell = selectedZone.Value.AllSlotCells()
+					var cell = selectedZone.AllSlotCells()
 						.Where(x => StoreUtility.IsGoodStoreCell(x, zone.Map, t, null, this.parent.Faction)).RandomElement();
 					t.DeSpawn();
-					GenPlace.TryPlaceThing(t, cell, selectedZone.Value.Map, ThingPlaceMode.Near);
+					GenPlace.TryPlaceThing(t, cell, selectedZone.Map, ThingPlaceMode.Near);
 				}
 			}
 		}
