@@ -1,9 +1,9 @@
 Skipdoor Delivery
 ===
 
-[![RimWorld](https://img.shields.io/badge/RimWorld-1.3-informational)](https://rimworldgame.com/) [![Steam Downloads](https://img.shields.io/steam/downloads/ToDo)](https://steamcommunity.com/sharedfiles/filedetails/?id=ToDo) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
+[![RimWorld](https://img.shields.io/badge/RimWorld-1.3-informational)](https://rimworldgame.com/) [![Steam Downloads](https://img.shields.io/steam/downloads/2854735284)](https://steamcommunity.com/sharedfiles/filedetails/?id=2854735284) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 
-[Skipdoor Delivery](https://steamcommunity.com/sharedfiles/filedetails/?id=ToDo) is a [RimWorld](https://rimworldgame.com/) patch for the skipdoor psycast from the [Vanilla Psycasts Expanded](https://steamcommunity.com/sharedfiles/filedetails/?id=2842502659) mod. When two or more skipdoors are placed on top of stockpile zones, items surrounding the skipgate will be teleported automatically to the stockpile zone with the highest priority. This can be used to take your hard-earned loot back to your base, or even to move items around the colony.
+[Skipdoor Delivery](https://steamcommunity.com/sharedfiles/filedetails/?id=2854735284) is a [RimWorld](https://rimworldgame.com/) patch for the skipdoor psycast from the [Vanilla Psycasts Expanded](https://steamcommunity.com/sharedfiles/filedetails/?id=2842502659) mod. When two or more skipdoors are placed on top of stockpile zones, items surrounding the skipgate will be teleported automatically to the stockpile zone with the highest priority. This can be used to take your hard-earned loot back to your base, or even to move items around the colony.
 
 Development
 ---
