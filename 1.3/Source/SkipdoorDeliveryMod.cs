@@ -49,22 +49,22 @@ namespace SkipdoorDelivery
 
 			targetZones.Sort((z1, z2) => z2.GetStoreSettings().Priority.CompareTo(z1.GetStoreSettings().Priority));
 
-			foreach (var t in GenRadial
+			foreach (var thing in GenRadial
 				         .RadialDistinctThingsAround(parent.Position, parent.Map, Props.radius, true)
 				         .Where(t => t.def.category == ThingCategory.Item))
 			{
 				foreach (var targetZone in targetZones)
 				{
-					if (!targetZone.GetStoreSettings().AllowedToAccept(t)) continue;
+					if (!targetZone.GetStoreSettings().AllowedToAccept(thing)) continue;
 
 					var targetCells = targetZone.AllSlotCells().Where(cell =>
-						StoreUtility.IsGoodStoreCell(cell, targetZone.Map, t, null, parent.Faction)).ToList();
+						StoreUtility.IsGoodStoreCell(cell, targetZone.Map, thing, null, parent.Faction)).ToList();
 
 					if (!targetCells.Any()) continue;
 
 					var targetCell = targetCells.RandomElement();
-					t.DeSpawn();
-					GenPlace.TryPlaceThing(t, targetCell, targetZone.Map, ThingPlaceMode.Near);
+					thing.DeSpawn();
+					GenPlace.TryPlaceThing(thing, targetCell, targetZone.Map, ThingPlaceMode.Near);
 					break;
 				}
 			}
