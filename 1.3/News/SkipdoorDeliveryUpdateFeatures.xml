@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+	<HugsLib.UpdateFeatureDef Abstract="true" Name="SkipdoorDeliveryUpdateFeature">
+		<defName>SkipdoorDeliveryUpdateFeature</defName>
+		<modNameReadable>Skipdoor Delivery</modNameReadable>
+		<modIdentifier>joseasoler.SkipdoorDelivery</modIdentifier>
+		<linkUrl>https://steamcommunity.com/sharedfiles/filedetails/?id=2854735284</linkUrl>
+	</HugsLib.UpdateFeatureDef>
+	<HugsLib.UpdateFeatureDef ParentName="SkipdoorDeliveryUpdateFeature">
+		<defName>SkipdoorDelivery_0_1_1</defName>
+		<assemblyVersion>0.1.1</assemblyVersion>
+		<content>
+			<![CDATA[<color=#e1e150>Bugfixes:</color>
+
+• Skipdoors will no longer teleport items currently stored inside storage items.
+]]>
+		</content>
+	</HugsLib.UpdateFeatureDef>
+</Defs>
