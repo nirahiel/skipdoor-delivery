@@ -85,6 +85,10 @@ namespace SkipdoorDelivery
 				         .RadialDistinctThingsAround(parent.Position, parent.Map, Props.radius, true)
 				         .Where(t => t.def.category == ThingCategory.Item))
 			{
+				// Only teleport items without a stockpile zone / storage or in the skipdoor's stockpile zone.
+				var currentHaulDestination = StoreUtility.CurrentHaulDestinationOf(thing);
+				if (currentHaulDestination != null && currentHaulDestination != zone) continue;
+
 				foreach (var target in targets)
 				{
 					var targetZone = target.zone;
