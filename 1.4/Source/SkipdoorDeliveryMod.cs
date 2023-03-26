@@ -5,6 +5,7 @@ using System.Linq;
 using VanillaPsycastsExpanded.Skipmaster;
 using Verse;
 using Verse.Sound;
+using VFECore;
 
 namespace SkipdoorDelivery
 {
@@ -61,7 +62,7 @@ namespace SkipdoorDelivery
 			var currentZonePriority = zone.GetStoreSettings().Priority;
 
 			var targets = new List<SkipdoorZone>();
-			foreach (var skipdoor in WorldComponent_SkipdoorManager.Instance.Skipdoors)
+			foreach (var skipdoor in WorldComponent_DoorTeleporterManager.Instance.DoorTeleporters.OfType<Skipdoor>())
 			{
 				if (skipdoor.Position.GetZone(skipdoor.Map) is Zone_Stockpile stockpile &&
 				    stockpile.GetStoreSettings().Priority > currentZonePriority)
