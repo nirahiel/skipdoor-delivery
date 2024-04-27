@@ -25,10 +25,6 @@ To compile this mod on Windows, you will need to install the [.NET Framework 4.7
 
 Compiling this project requires access to the [Vanilla Psycasts Expanded](https://steamcommunity.com/sharedfiles/filedetails/?id=2842502659) mod assemblies. The csproj file of this mod is set by default to the  path to this mod on Linux when using the Steam Workshop. You may need to modify this path depending on your setup.
 
-Contributions
----
-
-This project encourages community involvement and contributions. Check the [CONTRIBUTING](CONTRIBUTING.md) file for details. Existing contributors can be checked in the [contributors list](https://gitlab.com/joseasoler/skipdoor-delivery/-/graphs/main).  The implementation of the core mechanics of the mod was made by [Taranchuk](https://steamcommunity.com/profiles/76561199065983477/myworkshopfiles/?appid=294100). 
 
 [![RimWorld Mod Market discord server](https://i.imgur.com/cfoFEMA.png)](url=https://discord.gg/7befJWr9xS)
 
