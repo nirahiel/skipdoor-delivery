@@ -19,3 +19,4 @@ Developing a RimWorld mod is a huge task that is only made possible because its 
 * **[Vanilla Expanded Series community](https://www.patreon.com/oskarpotocki)**
 * **[Vanilla Psycasts Expanded](https://steamcommunity.com/sharedfiles/filedetails/?id=2842502659)**
 * **[Vicky Brasseur](https://www.vmbrasseur.com)** - [Forge your future with Open Source](https://pragprog.com/titles/vbopens/forge-your-future-with-open-source/)
+* **[joseasoler](https://steamcommunity.com/id/joseasoler)** - Maintainer of the 1.4 version.

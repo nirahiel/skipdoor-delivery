@@ -1,36 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
 	<name>Skipdoor Delivery</name>
-	<author>joseasoler, Taranchuk</author>
+	<author>nirahiel, joseasoler, Taranchuk</author>
 	<supportedVersions>
 		<li>1.3</li>
 		<li>1.4</li>
+		<li>1.5</li>
 	</supportedVersions>
-	<packageId>joseasoler.SkipdoorDelivery</packageId>
+	<packageId>nirahiel.SkipdoorDelivery</packageId>
 	<description><![CDATA[A patch for the skipdoor psycast from the Vanilla Psycasts Expanded mod.
 
 With this mod, skipdoors can teleport items to other skipdoors automatically, even if they are in different maps. You can use skipdoors to send your hard-earned loot back to your base, to move items around your colony, or even to help manage simultaneous colonies.
 
 <b>How does it work?</b>
 
-After creating your skipdoors, you must place a stockpile zone under each skipdoor that needs to send or receive items. The configuration of these stockpile zones is used by the skipdoors to choose which items to send, and where they should be sent.
+After creating your skipdoors, you must place a stockpile zone under each skipdoor that needs to receive items. The configuration of these stockpile zones is used by the skipdoors to choose which items to send, and where they should be sent.
 
-Skipdoors will only send things to skipdoors with a higher stockpile zone priority than themselves, and only if the filter of the target accepts the item being sent. They will always prefer sending items to the destination with the highest priority.
+Skipdoors will only send things to skipdoors with a higher stockpile zone priority than themselves, and only if the filter of the target accepts the item being sent. They will send things to the first valid spot that match the criteria. Items may be sent through skipdoors multiple times, especially across different maps.
 
-Skipdoors will only attempt to teleport things in a 5x5 area around itself. You can see this area in-game when you select a skipdoor. To be teleported, things must also be inside the same stockpile zone as the origin skipdoor, or they must not be in any stockpile zone. Skipdoors will never teleport items stored inside a storage building.
+Skipdoors will only attempt to teleport things in a 5x5 area around themselves. You can see this area in-game when you select a skipdoor. The skipdoor will teleport any item, whether they're in a stockpile or not. Skipdoors will never teleport items stored inside a storage building. Use storage buildings, such as shelves, if you want to make sure some items are never teleported, even if they are in the radius of a skipdoor.
 
 When things are teleported, they are placed in the stockpile zone of the chosen destination skipdoor, without a distance limit. This means that no items will be teleported if the stockpile zone has no remaining space, but also that you can make the zone as large as you need.
+
+Note : Since items may jump from gate to gate before reaching their final destination, especially if an item has multiple possible targets (example, going from a low priority stockpile to either a regular or high priority), it's possible that the teleported item ends up outside of the reach of the skipdoor.
+If you want to avoid this, make sure you limit the stockpile under a skipdoor to that skipdoor's radius.
 
 <b>Credits:</b>
 
 Coded by Taranchuk
 Tweaks by joseasoler
+Updated and enhanced by Nirahiel
 ]]></description>
 	<loadAfter>
 		<li>Ludeon.RimWorld</li>
 		<li>Ludeon.RimWorld.Royalty</li>
 		<li>Ludeon.RimWorld.Ideology</li>
-		<li>Vanilla Psycasts Expanded</li>
+		<li>VanillaExpanded.VPsycastsE</li>
 	</loadAfter>
 	<modDependencies>
 		<li>
