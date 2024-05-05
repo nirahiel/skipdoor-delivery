@@ -8,6 +8,7 @@ using Verse.Sound;
 using VFECore;
 using HarmonyLib;
 using UnityEngine;
+using System.Diagnostics.Eventing.Reader;
 
 namespace SkipdoorDelivery
 {
@@ -52,7 +53,9 @@ namespace SkipdoorDelivery
 			}
 		}
 
-		public override void CompTick()
+        private IEnumerable<IntVec3> RadialCells => GenRadial.RadialCellsAround(parent.Position, Props.radius, useCenter: true);
+
+        public override void CompTick()
 		{
 			base.CompTick();
 			if (Find.TickManager.TicksGame % Props.tickRate != 0) return;
@@ -144,6 +147,101 @@ namespace SkipdoorDelivery
                     FleckMaker.Static(cellExit, mapExit.Key, FleckDefOf.PsycastSkipInnerExit, Props.fleckScale);
                     FleckMaker.Static(cellExit, mapExit.Key, FleckDefOf.PsycastSkipOuterRingExit, Props.fleckScale);
                 }
+            }
+        }
+
+        public override IEnumerable<Gizmo> CompGetGizmosExtra() {
+            yield return new Command_Action {
+                defaultLabel = "SD_CreateStockpile".Translate(),
+                defaultDesc = "SD_CreateStockpileDesc".Translate(),
+                icon = ContentFinder<Texture2D>.Get("UI/Designators/ZoneCreate_Stockpile"),
+                action = CreateSkipdoorStockpile
+            };
+        }
+
+        private static AcceptanceReport IsZoneableCell(IntVec3 c, Map map) {
+            if (!c.InBounds(map)) {
+                return false;
+            }
+            if (c.Fogged(map)) {
+                return false;
+            }
+            if (c.InNoZoneEdgeArea(map)) {
+                return "TooCloseToMapEdge".Translate();
+            }
+            foreach (Thing item in map.thingGrid.ThingsAt(c)) {
+                if (!item.def.CanOverlapZones) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private void CreateSkipdoorStockpile() {
+            List<Skipdoor> selectedSkipdoors = Find.Selector.SelectedObjects.OfType<Skipdoor>().ToList();
+            Zone_Stockpile stockpile = null;
+            if (parent.Map.zoneManager.ZoneAt(parent.Position) != null) { // There's already a stockpile under that skipdoor
+                if (parent.Map.zoneManager.ZoneAt(parent.Position) is Zone_Stockpile) {
+                    stockpile = parent.Map.zoneManager.ZoneAt(parent.Position) as Zone_Stockpile;
+                }
+            }
+            if (stockpile == null) {
+                //Create a new stockpile
+                stockpile = new Zone_Stockpile(StorageSettingsPreset.DefaultStockpile, parent.Map.zoneManager);
+                parent.Map.zoneManager.RegisterZone(stockpile);
+            }
+            // Find all the cells in that stockpile's area. If each cell is not in a stockpile already, add it to the current stockpile.
+            // If it is in a stockpile that's not our new stockpile, add it to a list of stockpiles to merge.
+            List<Zone_Stockpile> stockpilesToMerge = new();
+            parent.Map.floodFiller.FloodFill(parent.Position, delegate (IntVec3 c) {
+                Zone_Stockpile existing;
+                if ((existing = (parent.Map.zoneManager.ZoneAt(c) as Zone_Stockpile)) != null) {
+                    if (existing != stockpile && !stockpilesToMerge.Contains(existing)) {
+                        stockpilesToMerge.Add(existing);
+                    }
+                }
+                return selectedSkipdoors.Any((Skipdoor door) => door.GetComp<CompTeleportBetweenStockpiles>().RadialCells.Contains(c)) && parent.Map.zoneManager.ZoneAt(c) == null && (bool)IsZoneableCell(c, parent.Map);
+            }, delegate (IntVec3 c) {
+                stockpile.AddCell(c);
+            });
+            if (stockpilesToMerge.Count > 0) {
+                foreach(Zone_Stockpile zone_Stockpile in stockpilesToMerge) {
+                    if (zone_Stockpile.settings.Priority > stockpile.settings.Priority) {
+                        stockpile.settings.Priority = zone_Stockpile.settings.Priority;
+                    }
+                    MergeQualities(stockpile.settings.filter, zone_Stockpile.settings.filter.AllowedQualityLevels);
+                    MergeHitPoints(stockpile.settings.filter, zone_Stockpile.settings.filter.AllowedHitPointsPercents);
+                    MergeAllowedDefs(stockpile.settings.filter, zone_Stockpile.settings.filter.AllowedThingDefs);
+                    List<IntVec3> cells = zone_Stockpile.Cells.ToList();
+                    zone_Stockpile.Delete();
+                    foreach (IntVec3 cell in cells) {
+                        stockpile.AddCell(cell);
+                    }
+                }
+            }
+
+        }
+
+        private void MergeQualities(ThingFilter filter, QualityRange otherRange) {
+            if (!filter.AllowedQualityLevels.Includes(otherRange.min)) {
+                filter.AllowedQualityLevels = new QualityRange(otherRange.min, filter.AllowedQualityLevels.max);
+            }
+            if (!filter.AllowedQualityLevels.Includes(otherRange.max)) {
+                filter.AllowedQualityLevels = new QualityRange(filter.AllowedQualityLevels.min, otherRange.max);
+            }
+        }
+        private void MergeHitPoints(ThingFilter filter, FloatRange otherRange) {
+            if (!filter.AllowedHitPointsPercents.Includes(otherRange.min)) {
+                filter.AllowedHitPointsPercents = new FloatRange(otherRange.min, filter.allowedHitPointsPercents.max);
+            }
+            if (!filter.AllowedHitPointsPercents.Includes(otherRange.max)) {
+                filter.AllowedHitPointsPercents = new FloatRange(filter.allowedHitPointsPercents.min, otherRange.max);
+            }
+        }
+
+        private void MergeAllowedDefs(ThingFilter filter, IEnumerable<ThingDef> allowedDefs) {
+            foreach(ThingDef def in allowedDefs) {
+                filter.SetAllow(def, true);
             }
         }
     }

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+    <SD_CreateStockpile>Create stockpile</SD_CreateStockpile>
+    <SD_CreateStockpileDesc>Create a stockpile for the selected skipdoor(s) with the default storage priority and filters.
+If one or more stockpiles overlap with the new stockpile, they will all be merged and their filters combined, with the priority set to the highest stockpile.</SD_CreateStockpileDesc>
+</LanguageData>
