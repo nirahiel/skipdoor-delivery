@@ -1,18 +1,15 @@
-﻿using System;
-using RimWorld;
+﻿using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using VanillaPsycastsExpanded.Skipmaster;
 using Verse;
 using Verse.Sound;
 using VFECore;
-using HarmonyLib;
-using UnityEngine;
-using System.Diagnostics.Eventing.Reader;
 
-namespace SkipdoorDelivery
-{
-	public class CompProperties_TeleportBetweenStockpiles : CompProperties
+namespace SkipdoorDelivery {
+    public class CompProperties_TeleportBetweenStockpiles : CompProperties
 	{
 		public int tickRate;
 		public float radius;
@@ -45,7 +42,14 @@ namespace SkipdoorDelivery
 	{
 		public CompProperties_TeleportBetweenStockpiles Props => base.props as CompProperties_TeleportBetweenStockpiles;
 
-		public override void PostDrawExtraSelectionOverlays()
+        private bool isGlobalSkipdoor = LoadedModManager.GetMod<EnhancedSkipdoor>().GetSettings<Settings>().gatesStartGlobal;
+
+        public override void PostExposeData() {
+            base.PostExposeData();
+            Scribe_Values.Look(ref isGlobalSkipdoor, "isGlobalSkipdoor");
+        }
+
+        public override void PostDrawExtraSelectionOverlays()
 		{
 			if (Props.radius > 0.1)
 			{
@@ -55,6 +59,7 @@ namespace SkipdoorDelivery
 
         private IEnumerable<IntVec3> RadialCells => GenRadial.RadialCellsAround(parent.Position, Props.radius, useCenter: true);
 
+        
         public override void CompTick()
 		{
 			base.CompTick();
@@ -65,8 +70,11 @@ namespace SkipdoorDelivery
 
             var targets = new List<SkipdoorZone>();
             foreach (var skipdoor in WorldComponent_DoorTeleporterManager.Instance.DoorTeleporters.OfType<Skipdoor>()) {
-                if (skipdoor != parent && skipdoor.Position.GetZone(skipdoor.Map) is Zone_Stockpile stockpile) {
-                    targets.Add(new SkipdoorZone(skipdoor, stockpile));
+                if (skipdoor != parent &&
+                    (skipdoor.Map == parent.Map || (skipdoor.GetComp<CompTeleportBetweenStockpiles>().isGlobalSkipdoor && isGlobalSkipdoor))) {
+                    if (skipdoor.Position.GetZone(skipdoor.Map) is Zone_Stockpile stockpile) {
+                        targets.Add(new SkipdoorZone(skipdoor, stockpile));
+                    }
                 }
             }
 
@@ -157,13 +165,20 @@ namespace SkipdoorDelivery
                 icon = ContentFinder<Texture2D>.Get("UI/Designators/ZoneCreate_Stockpile"),
                 action = CreateSkipdoorStockpile
             };
+            yield return new Command_Toggle {
+                icon = Resources.networkIcon,
+                isActive = () => isGlobalSkipdoor,
+                activateIfAmbiguous = false,
+                defaultLabel = "SD_GlobalModeToggle".Translate(),
+                defaultDesc = isGlobalSkipdoor ? "SD_GlobalModeGlobalDesc".Translate() : "SD_GlobalModeLocalDesc".Translate(),
+                toggleAction = () => {
+                    isGlobalSkipdoor = !isGlobalSkipdoor;
+                }
+            };
         }
 
         private static AcceptanceReport IsZoneableCell(IntVec3 c, Map map) {
-            if (!c.InBounds(map)) {
-                return false;
-            }
-            if (c.Fogged(map)) {
+            if (!c.InBounds(map) || c.Fogged(map)) {
                 return false;
             }
             if (c.InNoZoneEdgeArea(map)) {

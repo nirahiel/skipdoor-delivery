@@ -3,4 +3,9 @@
     <SD_CreateStockpile>Create stockpile</SD_CreateStockpile>
     <SD_CreateStockpileDesc>Create a stockpile for the selected skipdoor(s) with the default storage priority and filters.
 If one or more stockpiles overlap with the new stockpile, they will all be merged and their filters combined, with the priority set to the highest stockpile.</SD_CreateStockpileDesc>
+    <SD_GatesStartGlobal>New skipdoors start in global mode</SD_GatesStartGlobal>
+    <SD_GatesStartGlobalDesc>Turning this off will make newly spawned skipdoors start in local mode. Existing skipdoors won't be affected.</SD_GatesStartGlobalDesc>
+    <SD_GlobalModeToggle>Global Skipdoor</SD_GlobalModeToggle>
+    <SD_GlobalModeGlobalDesc>This gate is in global mode, it can send to and receive from gates anywhere.</SD_GlobalModeGlobalDesc>
+    <SD_GlobalModeLocalDesc>This gate is in local mode, it can only send to and receive from gates in the same map.</SD_GlobalModeLocalDesc>
 </LanguageData>

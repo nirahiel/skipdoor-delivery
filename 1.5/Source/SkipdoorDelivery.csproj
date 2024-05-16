@@ -60,6 +60,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EnhancedSkipdoor.cs" />
+    <Compile Include="Resources.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="SkipdoorDeliveryMod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
